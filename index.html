@@ -1,125 +1,114 @@
+Vidím podle tvého screenshotu, že už máš krásně připravený a otevřený soubor index.html ve svém repozitáři appka_test na GitHubu. To je ideální startovní čára!
+
+Jelikož jsi rovnou v HTML souboru, nejlepší a nejrychlejší cestou bude vytvořit webovou aplikaci, kterou si pak přes GitHub můžeš jedním kliknutím zdarma zveřejnit na internetu (přes funkci GitHub Pages).
+
+Připravil jsem pro tebe kód na jednoduchou, ale zábavnou Interaktivní kreslící aplikaci. Umožní ti malovat po obrazovce a měnit barvy štětce.
+
+Tady je postup, jak to rozchodit:
+
+1. Zkopíruj tento kód
+Tento kód v sobě spojuje HTML (strukturu), CSS (vzhled) a JavaScript (funkčnost – samotné kreslení). Zkopíruj si celý tento blok:
+
+HTML
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <title>Moje super appka</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f8ff;
-      margin-top: 100px;
-    }
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      background-color: #2ea44f;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #22863a;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Kreslící Appka</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #2c3e50;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        h1 { margin-top: 20px; }
+        .controls {
+            margin: 15px 0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        canvas {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            cursor: crosshair;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #e74c3c;
+            color: white;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover { background: #c0392b; }
+        input[type="color"] {
+            cursor: pointer;
+            height: 40px;
+            border: none;
+            background: none;
+        }
+    </style>
 </head>
 <body>
 
-  <h1>Ahoj! 👋</h1>
-  <p>Tohle je moje první aplikace přes GitHub.</p>
-  <button onclick="alert('Super! Tvoje první aplikace funguje na jedničku. 🚀')">Klikni na mě</button>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="cs">
-<head>
-  <meta charset="UTF-8">
-  <title>Můj úkolníček</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
-      display: flex;
-      justify-content: center;
-      margin-top: 50px;
-    }
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      width: 350px;
-      text-align: center;
-    }
-    input {
-      width: 60%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      padding: 10px 15px;
-      background-color: #2ea44f;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover { background-color: #22863a; }
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    li {
-      background: #eee;
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .delete-btn {
-      background-color: #cb2431;
-      padding: 5px 10px;
-      font-size: 12px;
-    }
-    .delete-btn:hover { background-color: #a31a26; }
-  </style>
-</head>
-<body>
-
-  <div class="container">
-    <h1>Moje úkoly 📝</h1>
-    <input type="text" id="taskInput" placeholder="Co potřebuješ udělat?">
-    <button onclick="addTask()">Přidat</button>
+    <h1>Moje super kreslící appka 🎨</h1>
     
-    <ul id="taskList">
-      </ul>
-  </div>
+    <div class="controls">
+        <label for="colorPicker">Vyber barvu:</label>
+        <input type="color" id="colorPicker" value="#2980b9">
+        <button onclick="clearCanvas()">Vymazat plátno</button>
+    </div>
 
-  <script>
-    // Tohle je mozek aplikace (JavaScript), který zařizuje, aby to něco dělalo
-    function addTask() {
-      let input = document.getElementById("taskInput");
-      let taskText = input.value;
+    <canvas id="myCanvas" width="800" height="500"></canvas>
 
-      if (taskText === "") {
-        alert("Musíš nejdřív něco napsat!");
-        return;
-      }
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        const colorPicker = document.getElementById('colorPicker');
+        let isDrawing = false;
 
-      let li = document.createElement("li");
-      li.innerHTML = taskText + ' <button class="delete-btn" onclick="this.parentElement.remove()">Smazat</button>';
+        // Nastavení událostí pro myš
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
 
-      document.getElementById("taskList").appendChild(li);
-      input.value = ""; // Tohle vyčistí políčko po přidání úkolu
-    }
-  </script>
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = colorPicker.value;
+
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath(); // Reset cesty pro další tah
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
 
 </body>
 </html>
