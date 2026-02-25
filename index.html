@@ -32,3 +32,94 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Můj úkolníček</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 350px;
+      text-align: center;
+    }
+    input {
+      width: 60%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #2ea44f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background-color: #22863a; }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: #eee;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .delete-btn {
+      background-color: #cb2431;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    .delete-btn:hover { background-color: #a31a26; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Moje úkoly 📝</h1>
+    <input type="text" id="taskInput" placeholder="Co potřebuješ udělat?">
+    <button onclick="addTask()">Přidat</button>
+    
+    <ul id="taskList">
+      </ul>
+  </div>
+
+  <script>
+    // Tohle je mozek aplikace (JavaScript), který zařizuje, aby to něco dělalo
+    function addTask() {
+      let input = document.getElementById("taskInput");
+      let taskText = input.value;
+
+      if (taskText === "") {
+        alert("Musíš nejdřív něco napsat!");
+        return;
+      }
+
+      let li = document.createElement("li");
+      li.innerHTML = taskText + ' <button class="delete-btn" onclick="this.parentElement.remove()">Smazat</button>';
+
+      document.getElementById("taskList").appendChild(li);
+      input.value = ""; // Tohle vyčistí políčko po přidání úkolu
+    }
+  </script>
+
+</body>
+</html>
